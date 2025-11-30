@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'pages/dashboard_screen.dart';
-import 'pages/driver_dashboard.dart';
-import 'pages/site_manager_dashboard.dart'; // NOUVEAU
+import 'pages/login_screen.dart';
 
 void main() {
   runApp(const BtpOptimApp());
@@ -16,14 +14,16 @@ class BtpOptimApp extends StatelessWidget {
       title: 'BTP Optim',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        fontFamily: 'Segoe UI',
-        scaffoldBackgroundColor: const Color(0xFFf5f7fa),
+        useMaterial3: true,
       ),
-      // Changer ici selon l'utilisateur connecté
-      home: const SiteManagerDashboard(), // Chef de Chantier
-      // home: const DriverDashboard(), // Chauffeur
-      // home: const DashboardScreen(), // Responsable Logistique
+      home: const LoginScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
+      
+   
+      // home: const DashboardScreen(userData: {},),
+      // home: const DriverDashboard(userData: {},), 
+      // home: const SiteManagerDashboard(userData: {},),
+   

@@ -9,126 +9,73 @@ class KpiGrid extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       crossAxisCount: 4,
-      crossAxisSpacing: 20,
-      mainAxisSpacing: 20,
+      crossAxisSpacing: 12,
+      mainAxisSpacing: 12,
+      childAspectRatio: 1.2,
       children: [
-        _buildKpiCard(
-          'Coût total',
-          Icons.attach_money,
-          '124 500 MAD',
-          '5.2% vs mois dernier',
-          true,
-          [const Color(0xFF4361ee), const Color(0xFF3a56d4)],
-        ),
-        _buildKpiCard(
-          'Distance parcourue',
-          Icons.route,
-          '3 680 km',
-          '12.7% optimisation',
-          false,
-          [const Color(0xFF7209b7), const Color(0xFF5a08a5)],
-        ),
-        _buildKpiCard(
-          'Émissions CO₂',
-          Icons.eco,
-          '7.2 t',
-          '8.3% réduction',
-          true,
-          [const Color(0xFF4cc9f0), const Color(0xFF3ab0d4)],
-        ),
-        _buildKpiCard(
-          'Taux de retard',
-          Icons.schedule,
-          '6.2%',
-          '+1.4% attention',
-          false,
-          [const Color(0xFFf72585), const Color(0xFFd41c6f)],
-        ),
+        _buildKpiCard('Coût total', '124 500 MAD', '5.2% vs mois dernier', false),
+        _buildKpiCard('Distance parcourue', '3 680 km', '12.7% optimisation', true),
+        _buildKpiCard('Émissions CO₂', '7.2 t', '8.3% réduction', false),
+        _buildKpiCard('Taux de retard', '6.2%', '+1.4% attention', true),
       ],
     );
   }
 
-  Widget _buildKpiCard(
-    String title,
-    IconData icon,
-    String value,
-    String trend,
-    bool isDown,
-    List<Color> colors,
-  ) {
+  Widget _buildKpiCard(String title, String value, String trend, bool isPositive) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 30,
-            offset: const Offset(0, 10),
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
-      padding: const EdgeInsets.all(25),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF6c757d),
-                  fontWeight: FontWeight.w600,
-                ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                color: Color(0xFF6c757d),
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
               ),
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: colors,
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(
-                  icon,
-                  color: Colors.white,
-                  size: 18,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 15),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
             ),
-          ),
-          const SizedBox(height: 5),
-          Row(
-            children: [
-              Icon(
-                isDown ? Icons.arrow_downward : Icons.arrow_upward,
-                color: isDown ? const Color(0xFF10b981) : const Color(0xFFf72585),
-                size: 12,
+            const SizedBox(height: 12),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF212529),
               ),
-              const SizedBox(width: 5),
-              Text(
-                trend,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: isDown ? const Color(0xFF10b981) : const Color(0xFFf72585),
+            ),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                Icon(
+                  isPositive ? Icons.arrow_upward : Icons.arrow_downward,
+                  color: isPositive ? const Color(0xFF10b981) : const Color(0xFFf72585),
+                  size: 12,
                 ),
-              ),
-            ],
-          ),
-        ],
+                const SizedBox(width: 4),
+                Text(
+                  trend,
+                  style: TextStyle(
+                    color: isPositive ? const Color(0xFF10b981) : const Color(0xFFf72585),
+                    fontSize: 10,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

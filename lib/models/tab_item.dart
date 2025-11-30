@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class TabItem {
-  final String label;
   final IconData icon;
+  final String label;
 
-  const TabItem({required this.label, required this.icon});
+  TabItem({required this.icon, required this.label});
 }

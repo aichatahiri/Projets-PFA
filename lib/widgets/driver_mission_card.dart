@@ -2,20 +2,27 @@ import 'package:flutter/material.dart';
 
 class DriverMissionCard extends StatelessWidget {
   final Map<String, dynamic> mission;
+  final VoidCallback onConfirmDelivery;
+  final VoidCallback onStartNavigation;
 
-  const DriverMissionCard({super.key, required this.mission});
+  const DriverMissionCard({
+    super.key,
+    required this.mission,
+    required this.onConfirmDelivery,
+    required this.onStartNavigation,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.08),
-            blurRadius: 20,
-            offset: const Offset(0, 5),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -23,13 +30,15 @@ class DriverMissionCard extends StatelessWidget {
         children: [
           // Header avec statut
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               border: Border(
                 left: BorderSide(
                   color: mission['isPriority'] == true 
-                      ? Colors.red 
-                      : Colors.blue,
+                      ? const Color(0xFFf72585) 
+                      : mission['isCurrent'] == true
+                          ? const Color(0xFF4cc9f0)
+                          : const Color(0xFF4361EE),
                   width: 4,
                 ),
               ),
@@ -43,20 +52,23 @@ class DriverMissionCard extends StatelessWidget {
                       Text(
                         mission['title'],
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          const Icon(Icons.location_on, size: 16),
+                          const Icon(Icons.location_on, size: 14, color: Color(0xFF6c757d)),
                           const SizedBox(width: 4),
-                          Text(
-                            mission['address'],
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 14,
+                          Expanded(
+                            child: Text(
+                              mission['address'],
+                              style: const TextStyle(
+                                color: Color(0xFF6c757d),
+                                fontSize: 12,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
@@ -65,26 +77,27 @@ class DriverMissionCard extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: _getStatusColor(mission['status']).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     mission['status'],
                     style: TextStyle(
                       color: _getStatusColor(mission['status']),
                       fontWeight: FontWeight.bold,
-                      fontSize: 12,
+                      fontSize: 10,
                     ),
                   ),
                 ),
               ],
             ),
           ),
+          
           // Détails
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12),
             child: Column(
               children: [
                 _buildDetailRow('Quantité', mission['quantity']),
@@ -94,28 +107,45 @@ class DriverMissionCard extends StatelessWidget {
               ],
             ),
           ),
+          
           // Actions
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12),
             child: Row(
               children: [
                 Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: mission['isCurrent'] == true
-                          ? Colors.green
-                          : Colors.blue,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                    icon: Icon(mission['isCurrent'] == true
-                        ? Icons.check_circle
-                        : Icons.directions),
-                    label: Text(mission['isCurrent'] == true
-                        ? 'Marquer livré'
-                        : 'Démarrer'),
-                  ),
+                  child: mission['isCurrent'] == true
+                      ? ElevatedButton.icon(
+                          onPressed: onConfirmDelivery,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF4cc9f0),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                          ),
+                          icon: const Icon(Icons.check_circle, size: 14),
+                          label: const Text('Marquer livré'),
+                        )
+                      : mission['status'] == 'À faire'
+                          ? ElevatedButton.icon(
+                              onPressed: onStartNavigation,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF4361EE),
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                              ),
+                              icon: const Icon(Icons.directions, size: 14),
+                              label: const Text('Démarrer'),
+                            )
+                          : ElevatedButton.icon(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: const Color(0xFF4361EE),
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                              ),
+                              icon: const Icon(Icons.info, size: 14),
+                              label: const Text('Détails'),
+                            ),
                 ),
               ],
             ),
@@ -127,22 +157,22 @@ class DriverMissionCard extends StatelessWidget {
 
   Widget _buildDetailRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             label,
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 14,
+            style: const TextStyle(
+              color: Color(0xFF6c757d),
+              fontSize: 12,
             ),
           ),
           Text(
             value,
             style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
             ),
           ),
         ],
@@ -153,13 +183,13 @@ class DriverMissionCard extends StatelessWidget {
   Color _getStatusColor(String status) {
     switch (status) {
       case 'En cours':
-        return Colors.blue;
+        return const Color(0xFF4cc9f0);
       case 'À faire':
-        return Colors.orange;
+        return const Color(0xFFf72585);
       case 'Terminé':
-        return Colors.green;
+        return const Color(0xFF4361EE);
       default:
-        return Colors.grey;
+        return const Color(0xFF6c757d);
     }
   }
 }
